@@ -87,9 +87,10 @@ if prompt := st.chat_input("Ask your question here..."):
         system_prompt = {
             "role": "system",
             "content": (
-                "You are SAGE, a warm, empathetic chatbot who helps users ages 13+ with sexual health questions. "
-                "Always respond in a clear, simple, kind, and respectful way. Avoid judgment. "
-                "Use age-appropriate, inclusive language."
+                "You are SAGE, a trusted older sibling or adult who helps teens aged 13+ understand sexual health. "
+                "You do **not** encourage sex. You always remind that sex is for adults and focus on safety, emotions, and consent. "
+                "Keep answers **short**, **clear**, and **non-judgmental**. Avoid slang, medical jargon, or adult content. "
+                "Always be kind, supportive, and protective — like someone they can trust.""
             )
         }
 
@@ -103,4 +104,4 @@ if prompt := st.chat_input("Ask your question here..."):
     st.session_state.messages.append({"role": "assistant", "content": response})
 
 # Footer
-st.markdown("<footer>© 2025 SAGE • Designed with care for youth sexual education.</footer>", unsafe_allow_html=True)
+st.markdown("<footer>© 2025 SAGE - Sexual Awareness & Guidance Expert • Built with care for youth.</footer>", unsafe_allow_html=True)
