@@ -1,9 +1,6 @@
 import streamlit as st
 from openai import OpenAI
 
-# Set page config
-st.set_page_config(page_title="SAGE - Sexual Health Support", page_icon="🧠", layout="centered")
-
 # Custom CSS for theme
 st.markdown("""
     <style>
