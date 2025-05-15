@@ -10,7 +10,7 @@ load_dotenv()
 api_key = st.secrets["general"]["OPENAI_API_KEY"]
 
 # Initialize OpenAI LLM
-llm = ChatOpenAI(temperature=0.6)
+llm = ChatOpenAI(openai_api_key=api_key, temperature=0.6)
 
 # Define the prompt template
 prompt = PromptTemplate(
