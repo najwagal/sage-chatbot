@@ -1,34 +1,32 @@
 import streamlit as st
 import requests
 
-# Hugging Face setup
+# Hugging Face API setup
 API_URL = "https://api-inference.huggingface.co/models/distilgpt2"
-HF_TOKEN = st.secrets["huggingface"]["HF_API_KEY"]
-headers = {"Authorization": f"Bearer {HF_TOKEN}"}
+headers = {"Authorization": f"Bearer {st.secrets['hf_token']}"}
 
+# Function to query the model
 def query(payload):
     response = requests.post(API_URL, headers=headers, json=payload)
-    return response.json()
+    if response.status_code != 200:
+        st.error(f"API Error {response.status_code}: {response.text}")
+        return {"error": "API call failed"}
+    try:
+        return response.json()
+    except:
+        st.error("Response could not be decoded")
+        return {"error": "Invalid response format"}
 
 # Streamlit UI
 st.set_page_config(page_title="SAGE - Sexual Health Chatbot")
-st.title("SAGE – Sexual Health Chatbot")
-st.write("This tool provides youth-friendly sexual health education.")
+st.title("SAGE 🧠")
+st.write("Ask me anything about sexual health. I'm here for you 💬")
 
-user_input = st.text_input("Ask your question:")
+user_input = st.text_input("Type your question:")
 
 if user_input:
-    prompt = f"""
-    You are SAGE — a respectful, empathetic, and professional chatbot.
-    Provide a simple, fact-based response suitable for someone aged 13.
+    prompt = f"You are SAGE, a friendly and respectful chatbot that answers questions about sexual health clearly:\n\n{user_input}"
+    output = query({"inputs": prompt})
 
-    Question: {user_input}
-    Answer:
-    """
-    result = query({"inputs": prompt})
-
-    try:
-        response = result[0]["generated_text"].split("Answer:")[-1].strip()
-        st.markdown(f"**SAGE:** {response}")
-    except Exception:
-        st.error("Sorry, there was an issue processing your request.")
+    if "error" not in output:
+        st.markdown(f"**SAGE:** {output[0]['generated_text']}")
