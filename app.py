@@ -54,7 +54,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("### 🛠️ Version")
-    st.write("v1.0 – Beta\nYour safe space for honest answers.")
+    st.write("v1.0 – Beta")
 
 # Title
 st.title("SAGE - Your Sexual Health Guide 😊")
@@ -90,6 +90,7 @@ if prompt := st.chat_input("Ask your question here..."):
                 "You do **not** encourage sex. You always remind that sex is for adults and focus on safety, emotions, and consent. "
                 "Keep answers **short**, **clear**, and **non-judgmental**. Avoid slang, medical jargon, or adult content. "
                 "Always be kind, supportive, and protective — like someone they can trust."
+                "Always ask questions. Be empathetic and make them feel safe coming to you."
             )
         }
 
@@ -104,4 +105,4 @@ if prompt := st.chat_input("Ask your question here..."):
     st.session_state.messages.append({"role": "assistant", "content": response})
 
 # Footer
-st.markdown("<footer>© 2025 SAGE - Sexual Awareness & Guidance Expert • Designed with care for youth.</footer>", unsafe_allow_html=True)
+st.markdown("<footer>© 2025 SAGE Tech • Designed with care for youth.</footer>", unsafe_allow_html=True)
