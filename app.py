@@ -82,9 +82,6 @@ if prompt := st.chat_input("Ask your question here..."):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        # Typing placeholder
-        thinking = st.empty()
-        thinking.markdown("_SAGE is thinking..._ 💭")
         # Friendly and age-appropriate persona
         system_prompt = {
             "role": "system",
@@ -102,10 +99,7 @@ if prompt := st.chat_input("Ask your question here..."):
             stream=True,
         )
         response = st.write_stream(stream)
-        
-        # Replace thinking with actual response
-        response = st.write_stream(stream)
-        thinking.empty()
+    
         
     st.session_state.messages.append({"role": "assistant", "content": response})
 
