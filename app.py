@@ -7,7 +7,7 @@ from langchain.prompts import PromptTemplate
 
 # Load secrets (if running locally with .env file)
 load_dotenv()
-api_key = os.getenv("OPENAI_API_KEY")
+api_key = st.secrets["general"]["OPENAI_API_KEY"]
 
 # Initialize OpenAI LLM
 llm = ChatOpenAI(temperature=0.6)
