@@ -1,80 +1,97 @@
 import streamlit as st
-import os
-from dotenv import load_dotenv
-from langchain.chat_models import ChatOpenAI
-from langchain.chains import LLMChain
-from langchain.prompts import PromptTemplate
+from openai import OpenAI
 
-# Load secrets (if running locally with .env file)
-load_dotenv()
-api_key = st.secrets["general"]["OPENAI_API_KEY"]
-
-# Initialize OpenAI LLM with API key
-llm = ChatOpenAI(temperature=0.6, openai_api_key=api_key)
-
-# Define the prompt template
-prompt = PromptTemplate(
-    input_variables=["user_input"],
-    template="""
-    You are SAGE — a warm, respectful, and judgment-free chatbot designed to answer questions about sexual health.
-
-    Please respond to the following question in a clear, simple, and empathetic tone that a 15-year-old can understand.
-
-    Question: {user_input}
-    Answer:
-    """
+# Page config
+st.set_page_config(
+    page_title="SAGE - Sexual Health Support",
+    page_icon="🧠",
+    layout="centered"
 )
 
-# Create the LangChain
-chain = LLMChain(llm=llm, prompt=prompt)
-
-# Set page config and style
-st.set_page_config(page_title="SAGE - Sexual Health Chatbot", page_icon="🧠")
-
-st.markdown(
-    """
+# Custom CSS for welcoming theme + chat box styling + background + footer
+st.markdown("""
     <style>
-    /* Background */
-    .stApp {
-        background: #F0F8FF;  /* Soft baby blue */
-        color: #333333;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    /* Hide Streamlit default footer and menu */
-    #MainMenu, footer {
-        visibility: hidden;
-    }
-    /* Chat input style */
-    .stTextInput>div>div>input {
-        border-radius: 12px;
-        padding: 10px;
-        font-size: 1rem;
-    }
+        body {
+            background-color: #f0f4f8;  /* soft, calming pastel blue */
+        }
+        .main {
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 700px;
+            margin: auto;
+        }
+        .avatar {
+            width: 80px;
+            margin: 1rem auto;
+            display: block;
+            border-radius: 50%;
+        }
+        .stChatInputContainer {
+            background-color: #e8f0fe !important; /* light blue input */
+            border-radius: 12px !important;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            color: #888;
+            font-size: 0.85rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
     </style>
-    """,
-    unsafe_allow_html=True,
-)
+""", unsafe_allow_html=True)
 
-# Title and intro
-st.title("SAGE 🧠")
-st.write("Ask me anything about sexual health. I'm here for you 💬")
+# Wrapper div for centered chat box and content
+st.markdown('<div class="main">', unsafe_allow_html=True)
 
-# User input
-user_input = st.text_input("Type your question below:")
+# Avatar + Title + Intro with flower emoji 🌼
+st.image("https://i.imgur.com/fS7nZZz.png", caption="Hi, I'm SAGE!", use_column_width=False, width=120, class_="avatar")
+st.title("🌼 SAGE - Your Sexual Health Guide")
+st.write("Welcome! I'm **SAGE**, your friendly, non-judgmental chatbot here to answer your questions about sexual health. "
+         "Feel free to ask me anything — I'm here for you 💬")
 
-# Chatbot response
-if user_input:
-    response = chain.run(user_input=user_input)
-    st.markdown(f"**SAGE:** {response}")
+# OpenAI client init
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-# Friendly footer
-st.markdown(
-    """
-    <hr style="margin-top: 2rem; margin-bottom: 0.5rem;">
-    <div style="text-align: center; color: #888; font-size: 0.9rem;">
-        SAGE © 2025 • Built with ❤️ using Streamlit & OpenAI<br>
-        For educational use only. No judgment, just answers.
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# Session state initialization
+if "openai_model" not in st.session_state:
+    st.session_state["openai_model"] = "gpt-3.5-turbo"
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Display chat history
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# Handle new user prompt input
+if prompt := st.chat_input("Ask your question here..."):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    with st.chat_message("assistant"):
+        system_prompt = {
+            "role": "system",
+            "content": (
+                "You are SAGE, a warm, empathetic chatbot who helps users ages 13+ with sexual health questions. "
+                "Always respond in a clear, simple, kind, and respectful way. Avoid judgment. "
+                "Use age-appropriate, inclusive language."
+            )
+        }
+
+        stream = client.chat.completions.create(
+            model=st.session_state["openai_model"],
+            messages=[system_prompt] + st.session_state.messages,
+            stream=True,
+        )
+        response = st.write_stream(stream)
+
+    st.session_state.messages.append({"role": "assistant", "content": response})
+
+st.markdown('</div>', unsafe_allow_html=True)
+
+# Footer
+st.markdown("<footer>© 2025 SAGE • Designed with care for youth sexual education.</footer>", unsafe_allow_html=True)
