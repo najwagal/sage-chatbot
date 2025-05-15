@@ -26,10 +26,40 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# Sidebar content
+with st.sidebar:
+    st.markdown("## 🧠 About SAGE")
+    st.write(
+        "SAGE stands for **Sexual Awareness & Guidance Expert**. "
+        "I'm here to provide a safe, kind, and judgment-free space for learning about sexual health. "
+        "Ask me anything — no question is too embarrassing or silly. 💬"
+    )
+
+    st.markdown("---")
+    st.markdown("### 🔍 Common Topics")
+    st.write(
+        "- Sex & Consent\n"
+        "- STIs & Protection\n"
+        "- Birth Control\n"
+        "- Puberty & Body Changes\n"
+        "- LGBTQ+ Questions\n"
+        "- Emotions & Relationships"
+    )
+
+    st.markdown("---")
+    st.markdown("### ⚠️ Disclaimer")
+    st.write(
+        "SAGE is for educational purposes only. For medical emergencies, please consult a healthcare professional or reach out to a trusted adult."
+    )
+
+    st.markdown("---")
+    st.markdown("### 🛠️ Version")
+    st.write("v1.0 – Beta\nMade with ❤️ for youth empowerment")
+
 # Title
-st.title("🌼 SAGE - Your Sexual Health Guide")
-st.write("Welcome! I'm **SAGE**, your friendly, non-judgmental chatbot here to answer your questions about sexual health. "
-         "Feel free to ask me anything — I'm here for you 💬")
+st.title("SAGE - Your Sexual Health Guide 😊")
+st.write("Welcome! I'm **SAGE**, your friendly, non-judgmental chatbot here to answer your questions about sexual health 👩🏽‍❤️‍💋‍👨🏾. "
+         "Feel free to ask me anything — no question is too embarrassing or silly. 💬")
 
 # OpenAI setup
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
