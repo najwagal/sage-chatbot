@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # Hugging Face setup
-API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-small"
+API_URL = "https://api-inference.huggingface.co/models/distilgpt2"
 HF_TOKEN = st.secrets["huggingface"]["HF_API_KEY"]
 headers = {"Authorization": f"Bearer {HF_TOKEN}"}
 
